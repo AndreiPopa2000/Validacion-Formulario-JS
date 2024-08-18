@@ -184,6 +184,148 @@
 </div>
 </body>
 <script>
-    // La lógica aquí :)
+   document.addEventListener("DOMContentLoaded", function () {
+    const formulario = document.getElementById("registrationForm");
+    const nombreInput = document.getElementById("name");
+    const correoInput = document.getElementById("email");
+    const contrasenaInput = document.getElementById("password");
+    const confirmarContrasenaInput = document.getElementById("confirmPassword");
+    const fechaNacimientoInput = document.getElementById("birthdate");
+    const bioInput = document.getElementById("bio");
+    const botonEnviar = document.getElementById("submitBtn");
+
+    const nombreError = document.getElementById("nameError");
+    const correoError = document.getElementById("emailError");
+    const contrasenaError = document.getElementById("passwordError");
+    const confirmarContrasenaError = document.getElementById("confirmPasswordError");
+    const fechaNacimientoError = document.getElementById("birthdateError");
+    const bioError = document.getElementById("bioError");
+
+    const mensajeExito = document.getElementById("successMessage");
+    const tablaDatos = document.getElementById("dataTable");
+
+    const caracteresTextarea = document.getElementById("caracteresTextarea");
+
+    nombreInput.addEventListener("input", validarNombre);
+    correoInput.addEventListener("input", validarCorreo);
+    contrasenaInput.addEventListener("input", validarContrasena);
+    confirmarContrasenaInput.addEventListener("input", validarConfirmarContrasena);
+    fechaNacimientoInput.addEventListener("input", validarFechaNacimiento);
+    bioInput.addEventListener("input", validarBio);
+
+    formulario.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        if (
+            validarNombre() &&
+            validarCorreo() &&
+            validarContrasena() &&
+            validarConfirmarContrasena() &&
+            validarFechaNacimiento() &&
+            validarBio()
+        ) {
+            mensajeExito.innerText = "¡Registro exitoso!";
+            tablaDatos.style.display = "table";
+
+            document.getElementById("tableName").innerText = nombreInput.value;
+            document.getElementById("tableEmail").innerText = correoInput.value;
+            document.getElementById("tableBirthdate").innerText = fechaNacimientoInput.value;
+            document.getElementById("tableGender").innerText = document.getElementById("gender").value;
+            document.getElementById("tableBio").innerText = bioInput.value;
+
+            formulario.reset();
+            caracteresTextarea.innerText = "0";
+        } else {
+            mensajeExito.innerText = "";
+        }
+    });
+
+    
+
+    function validarNombre() {
+        const nombre = nombreInput.value.trim();
+        if (nombre.length < 10 || !/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+/.test(nombre)) {
+            nombreError.innerText = "El nombre debe tener al menos 10 caracteres y empezar con mayúscula.";
+            nombreInput.focus();
+            return false;
+        } else {
+            nombreError.innerText = "";
+            return true;
+        }
+    }
+
+    function validarCorreo() {
+        const correo = correoInput.value.trim();
+        const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regexCorreo.test(correo)) {
+            correoError.innerText = "El correo no tiene un formato válido.";
+            correoInput.focus();
+            return false;
+        } else {
+            correoError.innerText = "";
+            return true;
+        }
+    }
+
+    function validarContrasena() {
+        const contrasena = contrasenaInput.value;
+        const regexContrasena = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+        if (!regexContrasena.test(contrasena)) {
+            contrasenaError.innerText = "La contraseña debe tener al menos una mayúscula, un número y un carácter especial.";
+            contrasenaInput.focus();
+            return false;
+        } else {
+            contrasenaError.innerText = "";
+            return true;
+        }
+    }
+
+    function validarConfirmarContrasena() {
+        if (confirmarContrasenaInput.value !== contrasenaInput.value) {
+            confirmarContrasenaError.innerText = "Las contraseñas no coinciden.";
+            confirmarContrasenaInput.focus();
+            return false;
+        } else {
+            confirmarContrasenaError.innerText = "";
+            return true;
+        }
+    }
+
+    function validarFechaNacimiento() {
+        const fechaNacimiento = new Date(fechaNacimientoInput.value);
+        const fechaActual = new Date();
+        if (!fechaNacimientoInput.value || fechaNacimiento >= fechaActual) {
+            fechaNacimientoError.innerText = "La fecha de nacimiento no es válida.";
+            fechaNacimientoInput.focus();
+            return false;
+        } else {
+            fechaNacimientoError.innerText = "";
+            return true;
+        }
+    }
+
+    function validarBio() {
+        const bio = bioInput.value;
+        const maxLongitud = 100;
+        caracteresTextarea.innerText = bio.length;
+        if (bio.length > maxLongitud) {
+            bioInput.value = bio.substring(0, maxLongitud);
+            bioError.innerText = "No se permiten más de 100 caracteres.";
+            return false;
+        } else {
+            bioError.innerText = "";
+            return true;
+        }
+    }
+
+    function generarColorAleatorio(){
+        const letras = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letras[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+});
 </script>
 </html>
